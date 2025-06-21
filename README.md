@@ -8,13 +8,14 @@ adjust the Lightness and Chroma, but hue angle is generated automatically. The
 point of this is to make palettes for Metro RP2350 or Fruit Jam that will look
 good for making color swirl animations.
 
-![pastel palette](img/pastel.png)
+![neon palette](img/neon.png)
 
 ![saturated bright palette](img/saturated-bright.png)
 
 ![saturated medium palette](img/saturated-medium.png)
 
-![neon palette](img/neon.png)
+![pastel palette](img/pastel.png)
+
 
 The default picodvi video mode is hardcoded to 320x240 16-bit, using an 8-bit
 bitmap and a palette of 256 colors selected from the 65536 possible RGB565
