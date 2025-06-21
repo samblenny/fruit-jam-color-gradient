@@ -8,8 +8,12 @@ import gc
 import math
 import picodvi
 import supervisor
+import sys
+from terminalio import FONT
 from time import sleep
 from ulab import numpy as np
+
+from adafruit_display_text import bitmap_label
 
 
 def LCh_to_sRGB(L, C, h):
@@ -84,10 +88,9 @@ def draw_gradient(bitmap, palette):
     h = bitmap.height
     n = min(w, len(palette))
     x0 = (w - n) // 2
-    y0 = h // 6
     for x in range(n):
-        for y in range(h // 2):
-            bitmap[x0 + x, y0 + y] = x
+        for y in range(h):
+            bitmap[x0 + x, y] = x
 
 def init_display(width, height, color_depth):
     """Initialize the picodvi display
@@ -129,14 +132,46 @@ grp = Group(scale=1)
 grp.append(tilegrid)
 display.root_group = grp
 
-# Draw the gradient
+# Make a text label for status messages
+status = bitmap_label.Label(FONT, text="", color=0, scale=2)
+status.anchor_point = (0.5, 0.5)
+status.anchored_position = (320//2, 240//2)
+grp.append(status)
+
+# Draw the gradient (only need to do this once; main loop changes the palette)
 draw_gradient(bitmap, palette)
 
-# Cycle through palettes for a range of lightness and chroma values
+# Set min/max limits for Lightness and Chroma
+(L_min, L_max, L_step) = (0.1, 0.5, 0.01)
+(C_min, C_max, C_step) = (0.1, 2.0, 0.01)
+
+# Set initial Lightness and Chroma (uncomment the one you want)
+#(L, C) = (0.22, 0.59)   # saturated, medium lightness
+#(L, C) = (0.28, 0.59)   # saturated, brighter
+(L, C) = (0.24, 0.76)   # neon, bright
+#(L, C) = (0.42, 0.55)   # pastel
+
+# Main Loop: Update color palette, wait for keystroke to modify L or C, ...
 while True:
-    for C in range(2, 20, 1):
-        for L in range(1, 5, 1):
-            print("(L, C)", (L/10, C/10))
-            fill_gradient_palette(palette, L/10, C/10)
-            display.refresh()
-            sleep(1)
+    fill_gradient_palette(palette, L, C)
+    msg = 'L %.2f  C %.2f' % (L, C)
+    print(msg)
+    status.text = msg
+    display.refresh()
+    # Wait for keystroke input on the USB serial console
+    # WASD keys control Lightness and Chroma: (W:L+, S:L-, A:C-, D:C+)
+    while True:
+        sleep(0.01)
+        if supervisor.runtime.serial_bytes_available:
+            while supervisor.runtime.serial_bytes_available:
+                c = sys.stdin.read(1)
+                if c in ['w', 'W']:
+                    C = min(C_max, max(C_min, C + C_step))
+                elif c in ['s', 'S']:
+                    C = min(C_max, max(C_min, C - C_step))
+                elif c in ['a', 'A']:
+                    L = min(L_max, max(L_min, L - L_step))
+                elif c in ['d', 'D']:
+                    L = min(L_max, max(L_min, L + L_step))
+            # Break out of input loop so main loop can redraw the display
+            break
