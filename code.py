@@ -113,6 +113,7 @@ def init_display(width, height, color_depth):
 
 
 # Attempt to configure display with the requested picodvi video mode
+# To use 32-bit, you need a board with PSRAM
 requested_mode = (320, 240, 16)
 #requested_mode = (320, 240, 32)
 (width, height, color_depth) = requested_mode
