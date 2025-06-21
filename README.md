@@ -2,12 +2,24 @@
 <!-- SPDX-FileCopyrightText: Copyright 2025 Sam Blenny -->
 # Fruit Jam Color Gradient
 
-This generates a rainbow swirl color palette for a smooth range of saturated
-hues that have approximately the same luminance value. The goal here is to make
-a palette for Metro RP2350 or Fruit Jam that will work for animations with a
-color swirl effect. This code is meant for the picodvi 320x240 16-bit video
-mode with an 8-bit bitmap using a palette of 256 colors selected from the 65536
-possible colors of RGB565.
+This generates rainbow swirl color palettes in the LCh color space for picodvi
+displays on RP2350 boards. You can use the WASD keys on the serial console to
+adjust the Lightness and Chroma, but hue angle is generated automatically. The
+point of this is to make palettes for Metro RP2350 or Fruit Jam that will look
+good for making color swirl animations.
+
+![pastel palette](img/pastel.png)
+
+![saturated bright palette](img/saturated-bright.png)
+
+![saturated medium palette](img/saturated-medium.png)
+
+![neon palette](img/neon.png)
+
+The default picodvi video mode is hardcoded to 320x240 16-bit, using an 8-bit
+bitmap and a palette of 256 colors selected from the 65536 possible RGB565
+colors. On boards with PSRAM (Fruit Jam), you can edit the code to use 320x240
+32-bit for smoother gradients.
 
 This code was developed and tested on CircuitPython 10.0.0-alpha.7 with a Metro
 RP2350 (no PSRAM version) and a pre-release revision B Fruit Jam prototype.
