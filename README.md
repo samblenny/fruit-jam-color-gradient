@@ -22,8 +22,9 @@ It seems like you need a board with a PSRAM chip in order to use 640x480 with
 table summarizes the results of my video mode testing for the boards I had on
 hand:
 
-| Video Mode      | Fruit Jam | Metro RP2350 No PSRAM    |
-| --------------- | --------- | ------------------------ |
-| 320x240, 8-bit  | Yes!      | Yes!                     |
-| 320x240, 16-bit | Yes!      | Yes!                     |
-| 640x480, 8-bit  | Yes!      | MemoryError exception :( |
+| Video Mode     | Fruit Jam | Metro RP2350 No PSRAM    |
+| -------------- | --------- | ------------------------ |
+| (320, 240,  8) | Yes!      | Yes!                     |
+| (320, 240, 16) | Yes!      | Yes!                     |
+| (320, 240, 32) | Yes!      | MemoryError exception :( |
+| (640, 480,  8) | Yes!      | MemoryError exception :( |
